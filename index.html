@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width">
+        <title>Scan a list of BTC addresses</title>
+    </head>
+
+    <body>
+        <div>
+            Enter a comma separated list of Bitcoin Addresses/public keys and have the balance of each retrieved.
+        </div>
+  
+        <input type="text" id="addr-list" />
+        <input type="button" onclick="javascript: checkPublicKeys();" value="Check Keys"/>
+
+        <table id="output-table">
+    
+        </table>
+  
+    </body>
+    
+    <script src="https://code.jquery.com/jquery-3.1.0.js"></script>
+    
+    <script>
+      var lookupUrl  = "https://blockchain.info";
+      var lookupPath = "/q/addressbalance/";
+
+
+      function checkPublicKeys() {
+        var text = $('#addr-list').val();
+        var list = text.split(',');
+
+        console.log(list);
+
+        $.each(list, function(i, v) {
+          var addr = v;
+          var url  = lookupUrl + lookupPath + v;
+
+          console.log(url);
+
+          $.ajax({
+            type:     "GET",
+            url:      url
+            }).done(
+            function(d) {
+              var btc = d / 100000000;
+              console.log("BTC: " + btc);
+
+              $('#output-table').append("<tr><td>" + btc + "</td><td>" + v + "</td></tr>")
+            }
+          );
+        });
+      };
+      </script>
+      
+</html>
